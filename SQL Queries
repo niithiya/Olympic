@@ -1,0 +1,76 @@
+#1 identifying countries that have medals according to the sport and type of medal (Bronze, Silver, Gold) according to the medal count in ascending order
+SELECT sport, country, COUNT (medal), medal
+FROM olympic
+GROUP BY sport , country, medal
+ORDER BY COUNT(medal) desc
+
+#2 identifying athletes based on the number of Gold medals attained based on the sport that they participated
+SELECT country, athlete, sport, gender, COUNT(medal) as total_no_medal
+FROM olympic
+WHERE medal='Gold'
+GROUP BY country, athlete, sport, gender
+ORDER BY COUNT(medal) DESC
+
+#3 classifying medals using CASE statement and querying how women performed in Archery
+SELECT year, sport, gender, medal,
+CASE 
+	WHEN medal = 'Bronze' THEN 'Good'
+	WHEN medal = 'Silver' THEN 'Great'
+	Else 'Excellent'
+END AS compliment
+FROM olympic
+WHERE sport ='Archery' AND
+gender= 'Women'
+ORDER BY year ASC;
+
+
+#4 Athletes who have the most number of gold medals in descending order
+
+SELECT athlete, country, COUNT(medal) AS no_of_medals
+FROM olympic
+WHERE medal='Gold'
+GROUP BY athlete,country
+ORDER BY COUNT(medal) DESC;
+
+
+#5 Female athletes who have the most number of gold medals in descending order
+SELECT athlete, country, event, COUNT(medal)
+FROM olympic
+WHERE medal ='Gold' AND gender='Women'
+GROUP BY athlete, country, event
+ORDER BY COUNT (medal) DESC
+#6 find out which other countries apart from USA are in the top-tier of winning gold medals
+SELECT athlete, country, sport, medal, COUNT(medal) AS no_of_medals
+FROM olympic
+WHERE gender='Women' AND country NOT LIKE 'USA%'
+GROUP BY athlete, country, sport, medal
+ORDER BY COUNT(medal) DESC
+
+#7 find out when female athletes started to win medals
+SELECT year, athlete, country, sport, medal, COUNT(medal)
+FROM olympic
+WHERE gender='Women'  
+GROUP BY year, athlete, country, sport, medal
+ORDER BY year ASC
+
+#8 identifying the pattern of women’s medal tally; seems to increase in years. In 2012, it stands at 924. Whereas in 1900, it was 11.
+SELECT year, COUNT(medal)
+FROM olympic
+WHERE gender='Women'  AND (year>=1900 AND year<=2012)
+GROUP BY year
+ORDER BY year ASC
+
+#9 finding out how women performed in Olympics based on their medal count in descending order
+SELECT year, athlete, medal, COUNT (medal), sport
+FROM olympic
+WHERE gender= 'Women' 
+GROUP BY year, athlete, medal, sport
+ORDER BY COUNT (medal) DESC
+
+#10 using HAVING clause to specify female athletes and the countries they came from that have won gold medals with the exception of USA
+SELECT year, country, athlete, medal, COUNT (medal), sport
+FROM olympic
+WHERE gender='Women' AND country NOT LIKE 'USA'
+GROUP BY year, country, athlete, medal, sport
+HAVING medal= 'Gold'
+ORDER BY COUNT (medal) DESC
